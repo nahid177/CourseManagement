@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/CourseApp.API/CourseApp.API.csproj" />
+    <Project Path="src/CourseApp.Application/CourseApp.Application.csproj" />
+    <Project Path="src/CourseApp.Core/CourseApp.Core.csproj" />
+    <Project Path="src/CourseApp.Desktop/CourseApp.Desktop.csproj" />
+    <Project Path="src/CourseApp.Infrastructure/CourseApp.Infrastructure.csproj" />
+  </Folder>
+</Solution>
