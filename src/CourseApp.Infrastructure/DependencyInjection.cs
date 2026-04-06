@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using CourseApp.Application.Interfaces;
 using CourseApp.Infrastructure.Persistence;
 using CourseApp.Infrastructure.Repositories;
 using CourseApp.Infrastructure.Security;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace CourseApp.Infrastructure;
 
@@ -26,7 +25,8 @@ public static class DependencyInjection
             options.UseNpgsql(connectionString));
 
         services.AddScoped<IAdminRepository, AdminRepository>();
-        services.AddScoped<IPasswordHasher, PasswordHasher>();
+        services.AddScoped<IPasswordHasher, AppPasswordHasher>();
+        services.AddScoped<IJwtService, JwtService>();
 
         return services;
     }

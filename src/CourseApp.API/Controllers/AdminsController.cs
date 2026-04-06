@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using CourseApp.Application.DTOs.Admins;
+﻿using CourseApp.Application.DTOs.Admins;
 using CourseApp.Application.Interfaces;
 using CourseApp.Core.Entities;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CourseApp.API.Controllers;
 
@@ -11,13 +12,16 @@ public class AdminsController : ControllerBase
 {
     private readonly IAdminRepository _adminRepository;
     private readonly IPasswordHasher _passwordHasher;
+    private readonly IJwtService _jwtService;
 
     public AdminsController(
         IAdminRepository adminRepository,
-        IPasswordHasher passwordHasher)
+        IPasswordHasher passwordHasher,
+        IJwtService jwtService)
     {
         _adminRepository = adminRepository;
         _passwordHasher = passwordHasher;
+        _jwtService = jwtService;
     }
 
     [HttpGet]
@@ -72,6 +76,36 @@ public class AdminsController : ControllerBase
         return Ok(response);
     }
 
+    [HttpPost("login")]
+    public async Task<IActionResult> Login(
+        [FromBody] LoginRequest request,
+        CancellationToken cancellationToken)
+    {
+        var admin = await _adminRepository.GetByCodeAsync(request.Code, cancellationToken);
+
+        if (admin is null)
+        {
+            return Unauthorized(new { message = "Invalid credentials." });
+        }
+
+        var isValid = _passwordHasher.VerifyPassword(request.Password, admin.PasswordHash);
+
+        if (!isValid)
+        {
+            return Unauthorized(new { message = "Invalid credentials." });
+        }
+
+        var token = _jwtService.GenerateToken(admin.Id, admin.Code);
+
+        return Ok(new
+        {
+            token,
+            adminId = admin.Id,
+            code = admin.Code,
+            mustResetPassword = admin.MustResetPassword
+        });
+    }
+
     [HttpPost("{id:int}/reset-password")]
     public async Task<IActionResult> ResetPassword(
         int id,
@@ -91,5 +125,12 @@ public class AdminsController : ControllerBase
         await _adminRepository.SaveChangesAsync(cancellationToken);
 
         return Ok(new { message = "Password reset successful." });
+    }
+
+    [Authorize]
+    [HttpGet("secure")]
+    public IActionResult Secure()
+    {
+        return Ok(new { message = "You are authorized." });
     }
 }

@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
 using CourseApp.Application.Interfaces;
+using Microsoft.AspNetCore.Identity;
 
 namespace CourseApp.Infrastructure.Security;
 
-public class PasswordHasher : IPasswordHasher
+public class AppPasswordHasher : IPasswordHasher
 {
     private readonly PasswordHasher<object> _passwordHasher = new();
 
@@ -19,7 +19,11 @@ public class PasswordHasher : IPasswordHasher
 
     public bool VerifyPassword(string password, string passwordHash)
     {
-        var result = _passwordHasher.VerifyHashedPassword(new object(), passwordHash, password);
+        var result = _passwordHasher.VerifyHashedPassword(
+            new object(),
+            passwordHash,
+            password);
+
         return result == PasswordVerificationResult.Success
             || result == PasswordVerificationResult.SuccessRehashNeeded;
     }
