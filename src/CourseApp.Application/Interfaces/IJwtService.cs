@@ -8,5 +8,6 @@ namespace CourseApp.Application.Interfaces;
 
 public interface IJwtService
 {
-    string GenerateToken(int adminId, string code);
+    string GenerateAdminToken(int adminId, string code);
+    string GenerateTeacherToken(int teacherId, string codeNumber, string teacherType);
 }

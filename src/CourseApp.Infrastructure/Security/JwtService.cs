@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CourseApp.Application.Interfaces;
+﻿using CourseApp.Application.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 
 namespace CourseApp.Infrastructure.Security;
 
@@ -20,7 +16,32 @@ public class JwtService : IJwtService
         _configuration = configuration;
     }
 
-    public string GenerateToken(int adminId, string code)
+    public string GenerateAdminToken(int adminId, string code)
+    {
+        var claims = new[]
+        {
+            new Claim(ClaimTypes.NameIdentifier, adminId.ToString()),
+            new Claim(ClaimTypes.Name, code),
+            new Claim(ClaimTypes.Role, "Admin")
+        };
+
+        return BuildToken(claims);
+    }
+
+    public string GenerateTeacherToken(int teacherId, string codeNumber, string teacherType)
+    {
+        var claims = new[]
+        {
+            new Claim(ClaimTypes.NameIdentifier, teacherId.ToString()),
+            new Claim(ClaimTypes.Name, codeNumber),
+            new Claim(ClaimTypes.Role, "Teacher"),
+            new Claim("teacher_type", teacherType)
+        };
+
+        return BuildToken(claims);
+    }
+
+    private string BuildToken(IEnumerable<Claim> claims)
     {
         var jwtKey = _configuration["Jwt:Key"];
         if (string.IsNullOrWhiteSpace(jwtKey))
@@ -30,13 +51,6 @@ public class JwtService : IJwtService
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-        var claims = new[]
-        {
-            new Claim(ClaimTypes.NameIdentifier, adminId.ToString()),
-            new Claim(ClaimTypes.Name, code),
-            new Claim(ClaimTypes.Role, "Admin")
-        };
 
         var token = new JwtSecurityToken(
             issuer: _configuration["Jwt:Issuer"],

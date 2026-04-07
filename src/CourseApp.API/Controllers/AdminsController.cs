@@ -95,7 +95,7 @@ public class AdminsController : ControllerBase
             return Unauthorized(new { message = "Invalid credentials." });
         }
 
-        var token = _jwtService.GenerateToken(admin.Id, admin.Code);
+        var token = _jwtService.GenerateAdminToken(admin.Id, admin.Code);
 
         return Ok(new
         {

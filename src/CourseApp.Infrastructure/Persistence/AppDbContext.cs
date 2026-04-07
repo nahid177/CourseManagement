@@ -17,6 +17,8 @@ public class AppDbContext : DbContext
     }
 
     public DbSet<Admin> Admins => Set<Admin>();
+    public DbSet<Teacher> Teachers => Set<Teacher>();
+
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
