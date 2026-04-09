@@ -1,0 +1,14 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CourseApp.Application.DTOs.TeacherStatuses;
+
+public class CreateTeacherStatusLessonRequest
+{
+    public int LessonNumber { get; set; }
+    public string VideoId { get; set; } = default!;
+    public string PdfId { get; set; } = default!;
+}
