@@ -3,6 +3,7 @@ using System;
 using CourseApp.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CourseApp.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260411160008_AddLessons")]
+    partial class AddLessons
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -103,104 +106,6 @@ namespace CourseApp.Infrastructure.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("lessons", (string)null);
-                });
-
-            modelBuilder.Entity("CourseApp.Core.Entities.Student", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)")
-                        .HasColumnName("email");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("name");
-
-                    b.Property<string>("Number")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("character varying(30)")
-                        .HasColumnName("number");
-
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("password_hash");
-
-                    b.Property<string>("ResetCode")
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)")
-                        .HasColumnName("reset_code");
-
-                    b.Property<DateTime?>("ResetCodeExpiresAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("reset_code_expires_at");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
-
-                    b.HasIndex("Number")
-                        .IsUnique();
-
-                    b.ToTable("students", (string)null);
-                });
-
-            modelBuilder.Entity("CourseApp.Core.Entities.StudentEnrollment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("integer")
-                        .HasColumnName("course_id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<string>("PaymentId")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("payment_id");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)")
-                        .HasColumnName("status");
-
-                    b.Property<int>("StudentId")
-                        .HasColumnType("integer")
-                        .HasColumnName("student_id");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StudentId");
-
-                    b.ToTable("student_enrollments", (string)null);
                 });
 
             modelBuilder.Entity("CourseApp.Core.Entities.Teacher", b =>
@@ -471,17 +376,6 @@ namespace CourseApp.Infrastructure.Persistence.Migrations
                     b.ToTable("teacher_videos", (string)null);
                 });
 
-            modelBuilder.Entity("CourseApp.Core.Entities.StudentEnrollment", b =>
-                {
-                    b.HasOne("CourseApp.Core.Entities.Student", "Student")
-                        .WithMany("Enrollments")
-                        .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Student");
-                });
-
             modelBuilder.Entity("CourseApp.Core.Entities.TeacherStatusCourse", b =>
                 {
                     b.HasOne("CourseApp.Core.Entities.TeacherStatus", "TeacherStatus")
@@ -502,11 +396,6 @@ namespace CourseApp.Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("TeacherStatusCourse");
-                });
-
-            modelBuilder.Entity("CourseApp.Core.Entities.Student", b =>
-                {
-                    b.Navigation("Enrollments");
                 });
 
             modelBuilder.Entity("CourseApp.Core.Entities.TeacherStatus", b =>

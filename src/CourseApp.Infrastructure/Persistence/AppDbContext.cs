@@ -25,6 +25,10 @@ public class AppDbContext : DbContext
 
     public DbSet<TeacherVideo> TeacherVideos => Set<TeacherVideo>();
     public DbSet<TeacherDocument> TeacherDocuments => Set<TeacherDocument>();
+    public DbSet<Lesson> Lessons => Set<Lesson>();
+
+    public DbSet<Student> Students => Set<Student>();
+    public DbSet<StudentEnrollment> StudentEnrollments => Set<StudentEnrollment>();
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
