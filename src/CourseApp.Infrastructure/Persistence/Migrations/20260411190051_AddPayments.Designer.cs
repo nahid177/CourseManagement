@@ -3,6 +3,7 @@ using System;
 using CourseApp.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CourseApp.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260411190051_AddPayments")]
+    partial class AddPayments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -159,101 +162,6 @@ namespace CourseApp.Infrastructure.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("payments", (string)null);
-                });
-
-            modelBuilder.Entity("CourseApp.Core.Entities.Quiz", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("AdminId")
-                        .HasColumnType("integer")
-                        .HasColumnName("admin_id");
-
-                    b.Property<int>("CourseId")
-                        .HasColumnType("integer")
-                        .HasColumnName("course_id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at");
-
-                    b.Property<int>("LessonNumber")
-                        .HasColumnType("integer")
-                        .HasColumnName("lesson_number");
-
-                    b.Property<int>("TeacherId")
-                        .HasColumnType("integer")
-                        .HasColumnName("teacher_id");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)")
-                        .HasColumnName("title");
-
-                    b.Property<string>("VideoId")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("video_id");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("quizzes", (string)null);
-                });
-
-            modelBuilder.Entity("CourseApp.Core.Entities.QuizQuestion", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityAlwaysColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CorrectAnswer")
-                        .IsRequired()
-                        .HasMaxLength(1)
-                        .HasColumnType("character varying(1)")
-                        .HasColumnName("correct_answer");
-
-                    b.Property<string>("OptionA")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("option_a");
-
-                    b.Property<string>("OptionB")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("option_b");
-
-                    b.Property<string>("OptionC")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("option_c");
-
-                    b.Property<string>("OptionD")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("option_d");
-
-                    b.Property<string>("Question")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("question");
-
-                    b.Property<int>("QuizId")
-                        .HasColumnType("integer")
-                        .HasColumnName("quiz_id");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuizId");
-
-                    b.ToTable("quiz_questions", (string)null);
                 });
 
             modelBuilder.Entity("CourseApp.Core.Entities.Student", b =>
@@ -633,17 +541,6 @@ namespace CourseApp.Infrastructure.Persistence.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("CourseApp.Core.Entities.QuizQuestion", b =>
-                {
-                    b.HasOne("CourseApp.Core.Entities.Quiz", "Quiz")
-                        .WithMany("Questions")
-                        .HasForeignKey("QuizId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Quiz");
-                });
-
             modelBuilder.Entity("CourseApp.Core.Entities.StudentEnrollment", b =>
                 {
                     b.HasOne("CourseApp.Core.Entities.Student", "Student")
@@ -675,11 +572,6 @@ namespace CourseApp.Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("TeacherStatusCourse");
-                });
-
-            modelBuilder.Entity("CourseApp.Core.Entities.Quiz", b =>
-                {
-                    b.Navigation("Questions");
                 });
 
             modelBuilder.Entity("CourseApp.Core.Entities.Student", b =>

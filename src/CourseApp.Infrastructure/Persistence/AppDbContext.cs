@@ -30,6 +30,11 @@ public class AppDbContext : DbContext
     public DbSet<Student> Students => Set<Student>();
     public DbSet<StudentEnrollment> StudentEnrollments => Set<StudentEnrollment>();
 
+    public DbSet<Payment> Payments => Set<Payment>();
+
+    public DbSet<Quiz> Quizzes => Set<Quiz>();
+    public DbSet<QuizQuestion> QuizQuestions => Set<QuizQuestion>();
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
