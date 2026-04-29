@@ -41,6 +41,9 @@ public class AppDbContext : DbContext
     public DbSet<QuizResult> QuizResults => Set<QuizResult>();
     public DbSet<ExamResult> ExamResults => Set<ExamResult>();
 
+    public DbSet<CourseCategory> CourseCategories => Set<CourseCategory>();
+    public DbSet<Course> Courses => Set<Course>();
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
