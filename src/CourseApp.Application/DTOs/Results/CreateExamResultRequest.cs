@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CourseApp.Core.Entities;
+namespace CourseApp.Application.DTOs.Results;
 
-public class ExamResult
+public class CreateExamResultRequest
 {
-    public int Id { get; set; }
-
     public int ExamId { get; set; }
     public int UserId { get; set; }
     public int TeacherId { get; set; }
@@ -18,9 +16,5 @@ public class ExamResult
 
     public decimal Marks { get; set; }
     public decimal TotalMarks { get; set; }
-    public bool IsPassed { get; set; }
-
     public string? TeacherFeedback { get; set; }
-
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

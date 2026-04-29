@@ -38,6 +38,8 @@ public class AppDbContext : DbContext
     public DbSet<Exam> Exams => Set<Exam>();
 
     public DbSet<ExamSubmission> ExamSubmissions => Set<ExamSubmission>();
+    public DbSet<QuizResult> QuizResults => Set<QuizResult>();
+    public DbSet<ExamResult> ExamResults => Set<ExamResult>();
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

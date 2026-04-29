@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-namespace CourseApp.Core.Entities;
+namespace CourseApp.Application.DTOs.Results;
 
-public class QuizResult
+public class CreateQuizResultRequest
 {
-    public int Id { get; set; }
-
     public int QuizId { get; set; }
     public int UserId { get; set; }
     public int CourseId { get; set; }
@@ -16,9 +14,4 @@ public class QuizResult
 
     public int TotalQuestions { get; set; }
     public int CorrectAnswers { get; set; }
-    public int WrongAnswers { get; set; }
-    public decimal Score { get; set; }
-    public bool IsPassed { get; set; }
-
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
