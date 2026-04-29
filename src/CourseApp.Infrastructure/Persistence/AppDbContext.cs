@@ -35,6 +35,10 @@ public class AppDbContext : DbContext
     public DbSet<Quiz> Quizzes => Set<Quiz>();
     public DbSet<QuizQuestion> QuizQuestions => Set<QuizQuestion>();
 
+    public DbSet<Exam> Exams => Set<Exam>();
+
+    public DbSet<ExamSubmission> ExamSubmissions => Set<ExamSubmission>();
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
