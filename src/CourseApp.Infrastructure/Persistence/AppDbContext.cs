@@ -44,6 +44,13 @@ public class AppDbContext : DbContext
     public DbSet<CourseCategory> CourseCategories => Set<CourseCategory>();
     public DbSet<Course> Courses => Set<Course>();
 
+    public DbSet<BookCategory> BookCategories => Set<BookCategory>();
+    public DbSet<Book> Books => Set<Book>();
+    public DbSet<BookCategoryMapping> BookCategoryMappings => Set<BookCategoryMapping>();
+    public DbSet<BookOrder> BookOrders => Set<BookOrder>();
+    public DbSet<BookOrderItem> BookOrderItems => Set<BookOrderItem>();
+    public DbSet<BookPayment> BookPayments => Set<BookPayment>();
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
