@@ -1,7 +1,6 @@
 ﻿using CourseApp.Application.DTOs.TeacherStatuses;
 using CourseApp.Application.Interfaces;
 using CourseApp.Core.Entities;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CourseApp.API.Controllers;
@@ -17,34 +16,68 @@ public class TeacherStatusesController : ControllerBase
         _teacherStatusRepository = teacherStatusRepository;
     }
 
-    [Authorize(Roles = "Teacher,Admin")]
     [HttpGet]
     public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
         var items = await _teacherStatusRepository.GetAllAsync(cancellationToken);
-
-        var response = items.Select(MapToResponse);
-
-        return Ok(response);
+        return Ok(items.Select(MapToResponse));
     }
 
-    [Authorize(Roles = "Teacher,Admin")]
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
+    {
+        var item = await _teacherStatusRepository.GetByIdAsync(id, cancellationToken);
+
+        if (item is null)
+        {
+            return NotFound(new { message = "Teacher status not found." });
+        }
+
+        return Ok(MapToResponse(item));
+    }
+
     [HttpGet("teacher/{teacherCode}")]
-    public async Task<IActionResult> GetByTeacherCode(string teacherCode, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetByTeacherCode(
+        string teacherCode,
+        CancellationToken cancellationToken)
     {
         var items = await _teacherStatusRepository.GetByTeacherCodeAsync(teacherCode, cancellationToken);
-
-        var response = items.Select(MapToResponse);
-
-        return Ok(response);
+        return Ok(items.Select(MapToResponse));
     }
 
-    [Authorize(Roles = "Teacher,Admin")]
     [HttpPost]
     public async Task<IActionResult> Create(
         [FromBody] CreateTeacherStatusRequest request,
         CancellationToken cancellationToken)
     {
+        if (string.IsNullOrWhiteSpace(request.TeacherCode))
+        {
+            return BadRequest(new { message = "TeacherCode is required." });
+        }
+
+        if (request.Courses is null || request.Courses.Count == 0)
+        {
+            return BadRequest(new { message = "At least one course is required." });
+        }
+
+        foreach (var course in request.Courses)
+        {
+            if (course.CourseId <= 0)
+            {
+                return BadRequest(new { message = "CourseId is required." });
+            }
+
+            if (string.IsNullOrWhiteSpace(course.CourseName))
+            {
+                return BadRequest(new { message = "CourseName is required." });
+            }
+
+            if (course.Lessons is null || course.Lessons.Count == 0)
+            {
+                return BadRequest(new { message = "At least one lesson is required." });
+            }
+        }
+
         var entity = new TeacherStatus
         {
             TeacherCode = request.TeacherCode,
@@ -74,7 +107,6 @@ public class TeacherStatusesController : ControllerBase
         });
     }
 
-    [Authorize(Roles = "Admin")]
     [HttpPost("{id:int}/approve")]
     public async Task<IActionResult> Approve(
         int id,
@@ -82,6 +114,7 @@ public class TeacherStatusesController : ControllerBase
         CancellationToken cancellationToken)
     {
         var entity = await _teacherStatusRepository.GetByIdAsync(id, cancellationToken);
+
         if (entity is null)
         {
             return NotFound(new { message = "Teacher status not found." });
@@ -92,7 +125,12 @@ public class TeacherStatusesController : ControllerBase
 
         await _teacherStatusRepository.SaveChangesAsync(cancellationToken);
 
-        return Ok(new { message = "Teacher status approval updated successfully." });
+        return Ok(new
+        {
+            message = "Teacher status approval updated successfully.",
+            id = entity.Id,
+            entity.AdminApproved
+        });
     }
 
     private static TeacherStatusResponse MapToResponse(TeacherStatus x)

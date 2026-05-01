@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace CourseApp.Core.Entities;
 
 public class Quiz
@@ -11,8 +10,10 @@ public class Quiz
     public int Id { get; set; }
 
     public int CourseId { get; set; }
-    public int LessonNumber { get; set; }
-    public string VideoId { get; set; } = default!;
+    public int LessonId { get; set; }
+
+    public int TeacherVideoId { get; set; }
+    public TeacherVideo TeacherVideo { get; set; } = default!;
 
     public int TeacherId { get; set; }
     public int? AdminId { get; set; }

@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 
 namespace CourseApp.Application.DTOs.TeacherStatuses;
 
+
 public class TeacherStatusCourseResponse
 {
     public int Id { get; set; }
     public int CourseId { get; set; }
     public string CourseName { get; set; } = default!;
+
     public List<TeacherStatusLessonResponse> Lessons { get; set; } = new();
 }

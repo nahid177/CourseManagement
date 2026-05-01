@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CourseApp.Core.Entities;
+﻿using CourseApp.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -24,13 +19,12 @@ public class QuizConfiguration : IEntityTypeConfiguration<Quiz>
             .HasColumnName("course_id")
             .IsRequired();
 
-        entity.Property(x => x.LessonNumber)
-            .HasColumnName("lesson_number")
+        entity.Property(x => x.LessonId)
+            .HasColumnName("lesson_id")
             .IsRequired();
 
-        entity.Property(x => x.VideoId)
-            .HasColumnName("video_id")
-            .HasMaxLength(100)
+        entity.Property(x => x.TeacherVideoId)
+            .HasColumnName("teacher_video_id")
             .IsRequired();
 
         entity.Property(x => x.TeacherId)
@@ -49,9 +43,16 @@ public class QuizConfiguration : IEntityTypeConfiguration<Quiz>
             .HasColumnName("created_at")
             .IsRequired();
 
+        entity.HasOne(x => x.TeacherVideo)
+            .WithMany()
+            .HasForeignKey(x => x.TeacherVideoId)
+            .OnDelete(DeleteBehavior.Cascade);
+
         entity.HasMany(x => x.Questions)
             .WithOne(x => x.Quiz)
             .HasForeignKey(x => x.QuizId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        entity.HasIndex(x => x.TeacherVideoId);
     }
 }

@@ -3,6 +3,7 @@ using System;
 using CourseApp.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace CourseApp.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260501151651_UpdateTeacherVideoClassFields")]
+    partial class UpdateTeacherVideoClassFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -724,17 +727,13 @@ namespace CourseApp.Infrastructure.Persistence.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
-                    b.Property<int>("LessonId")
+                    b.Property<int>("LessonNumber")
                         .HasColumnType("integer")
-                        .HasColumnName("lesson_id");
+                        .HasColumnName("lesson_number");
 
                     b.Property<int>("TeacherId")
                         .HasColumnType("integer")
                         .HasColumnName("teacher_id");
-
-                    b.Property<int>("TeacherVideoId")
-                        .HasColumnType("integer")
-                        .HasColumnName("teacher_video_id");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -742,9 +741,13 @@ namespace CourseApp.Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(200)")
                         .HasColumnName("title");
 
-                    b.HasKey("Id");
+                    b.Property<string>("VideoId")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("video_id");
 
-                    b.HasIndex("TeacherVideoId");
+                    b.HasKey("Id");
 
                     b.ToTable("quizzes", (string)null);
                 });
@@ -1324,17 +1327,6 @@ namespace CourseApp.Infrastructure.Persistence.Migrations
                         .IsRequired();
 
                     b.Navigation("Student");
-                });
-
-            modelBuilder.Entity("CourseApp.Core.Entities.Quiz", b =>
-                {
-                    b.HasOne("CourseApp.Core.Entities.TeacherVideo", "TeacherVideo")
-                        .WithMany()
-                        .HasForeignKey("TeacherVideoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("TeacherVideo");
                 });
 
             modelBuilder.Entity("CourseApp.Core.Entities.QuizQuestion", b =>

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CourseApp.Core.Entities;
+﻿using CourseApp.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -20,6 +15,10 @@ public class TeacherVideoConfiguration : IEntityTypeConfiguration<TeacherVideo>
         entity.Property(x => x.Id)
             .UseIdentityAlwaysColumn();
 
+        entity.Property(x => x.CourseId)
+            .HasColumnName("course_id")
+            .IsRequired();
+
         entity.Property(x => x.TeacherId)
             .HasColumnName("teacher_id")
             .IsRequired();
@@ -28,8 +27,22 @@ public class TeacherVideoConfiguration : IEntityTypeConfiguration<TeacherVideo>
             .HasColumnName("lesson_id")
             .IsRequired();
 
+        entity.Property(x => x.ClassName)
+            .HasColumnName("class_name")
+            .HasMaxLength(200)
+            .IsRequired();
+
+        entity.Property(x => x.ClassDetail)
+            .HasColumnName("class_detail")
+            .HasColumnType("text");
+
         entity.Property(x => x.VideoName)
             .HasColumnName("video_name")
+            .HasMaxLength(255)
+            .IsRequired();
+
+        entity.Property(x => x.OriginalFileName)
+            .HasColumnName("original_file_name")
             .HasMaxLength(255)
             .IsRequired();
 
@@ -50,5 +63,9 @@ public class TeacherVideoConfiguration : IEntityTypeConfiguration<TeacherVideo>
         entity.Property(x => x.CreatedAt)
             .HasColumnName("created_at")
             .IsRequired();
+
+        entity.HasIndex(x => x.CourseId);
+        entity.HasIndex(x => x.TeacherId);
+        entity.HasIndex(x => x.LessonId);
     }
 }
